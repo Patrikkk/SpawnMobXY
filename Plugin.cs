@@ -89,25 +89,29 @@ namespace SpawnMobXY
             }
             int x = -1;
             int y = -1;
+            if (args.Parameters.Count > 3 && !int.TryParse(args.Parameters[2], out x))
+            {
+                args.Player.SendErrorMessage("Invalid X coordinates!");
+                return;
+            }
             if (args.Parameters.Count == 3)
             {
                 args.Player.SendErrorMessage("You must set both X and Y coordinates!");
                 return;
             }
-            if (!int.TryParse(args.Parameters[2], out x))
+            if (args.Parameters.Count == 4)
             {
-                args.Player.SendErrorMessage("Invalid X coordinates!");
-                return;
-            }
-            if (!int.TryParse(args.Parameters[3], out y))
-            {
-                args.Player.SendErrorMessage("Invalid Y coordinates!");
-                return;
-            }
-            if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
-            {
-                args.Player.SendErrorMessage("Given coordinates are invalid!");
-                return;
+                if (args.Parameters.Count > 3 && !int.TryParse(args.Parameters[3], out y))
+                {
+                    args.Player.SendErrorMessage("Invalid Y coordinates!");
+                    return;
+                }
+
+                if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
+                {
+                    args.Player.SendErrorMessage("Given coordinates are invalid!");
+                    return;
+                }
             }
             int TileX = -1;
             int TileY = -1;
@@ -266,28 +270,30 @@ namespace SpawnMobXY
             }
             int x = -1;
             int y = -1;
+            if (args.Parameters.Count > 3 && !int.TryParse(args.Parameters[2], out x))
+            {
+                args.Player.SendErrorMessage("Invalid X coordinates!");
+                return;
+            }
             if (args.Parameters.Count == 3)
             {
                 args.Player.SendErrorMessage("You must set both X and Y coordinates!");
                 return;
             }
-            if (!int.TryParse(args.Parameters[2], out x))
+            if (args.Parameters.Count == 4)
             {
-                args.Player.SendErrorMessage("Invalid X coordinates!");
-                return;
-            }
-            if (!int.TryParse(args.Parameters[3], out y))
-            {
-                args.Player.SendErrorMessage("Invalid Y coordinates!");
-                return;
-            }
-            if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
-            {
-                args.Player.SendErrorMessage("Given coordinates are invalid!");
-                return;
-            }
+                if (args.Parameters.Count > 3 && !int.TryParse(args.Parameters[3], out y))
+                {
+                    args.Player.SendErrorMessage("Invalid Y coordinates!");
+                    return;
+                }
 
-
+                if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
+                {
+                    args.Player.SendErrorMessage("Given coordinates are invalid!");
+                    return;
+                }
+            }
 
             amount = Math.Min(amount, Main.maxNPCs);
 
