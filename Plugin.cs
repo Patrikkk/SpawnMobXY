@@ -63,7 +63,7 @@ namespace SpawnMobXY
 
             if (args.Parameters.Count == 1 && args.Parameters[0] == "list")
             {
-                args.Player.SendInfoMessage("Available bosses: {0}", string.Join(",", bosses));
+                args.Player.SendInfoMessage("Available bosses: {0}", string.Join(", ", bosses));
                 return;
                 
             }
@@ -82,14 +82,14 @@ namespace SpawnMobXY
 
 
             int amount = 1;
-            if (args.Parameters.Count == 2 && (!int.TryParse(args.Parameters[1], out amount) || amount <= 0))
+            if (args.Parameters.Count >= 2 && (!int.TryParse(args.Parameters[1], out amount) || amount <= 0))
             {
                 args.Player.SendErrorMessage("Invalid boss amount!");
                 return;
             }
             int x = -1;
             int y = -1;
-            if (args.Parameters.Count > 3 && !int.TryParse(args.Parameters[2], out x))
+            if (args.Parameters.Count >= 3 && !int.TryParse(args.Parameters[2], out x))
             {
                 args.Player.SendErrorMessage("Invalid X coordinates!");
                 return;
@@ -101,7 +101,7 @@ namespace SpawnMobXY
             }
             if (args.Parameters.Count == 4)
             {
-                if (args.Parameters.Count > 3 && !int.TryParse(args.Parameters[3], out y))
+                if (args.Parameters.Count >= 4 && !int.TryParse(args.Parameters[3], out y))
                 {
                     args.Player.SendErrorMessage("Invalid Y coordinates!");
                     return;
