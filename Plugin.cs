@@ -309,7 +309,7 @@ namespace SpawnMobXY
             }
 
             int amount = 1;
-            if (args.Parameters.Count == 2 && !int.TryParse(args.Parameters[1], out amount))
+            if (args.Parameters.Count >= 2 && !int.TryParse(args.Parameters[1], out amount))
             {
                 args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnmob <mob type> [amount] [XPos] [YPos]", TShock.Config.CommandSpecifier);
                 return;
@@ -359,7 +359,7 @@ namespace SpawnMobXY
                 {
                     if (args.Parameters.Count == 4)
                     {
-                        TSPlayer.Server.SpawnNPC(npc.type, npc.name, amount, x, y, 0, 0);
+                        TSPlayer.Server.SpawnNPC(npc.type, npc.name, amount, x, y, 35, 10);
                     }
                     else
                     {
