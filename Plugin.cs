@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace SpawnMobXY
 {
-	[ApiVersion(1, 18)]
+	[ApiVersion(1, 19)]
 	public class Plugin  : TerrariaPlugin
 	{
 		public override string Name { get { return "SpawnMobXY"; } }
