@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Timers;
 using System.Linq;
-using Newtonsoft.Json;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
-using TShockAPI.Hooks;
-using System.Text.RegularExpressions;
 
 namespace SpawnMobXY
 {
-	[ApiVersion(1, 19)]
+	[ApiVersion(1, 21)]
 	public class Plugin  : TerrariaPlugin
 	{
 		public override string Name { get { return "SpawnMobXY"; } }
