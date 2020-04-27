@@ -346,7 +346,7 @@ namespace SpawnMobXY
 			}
 			else if (npcs.Count > 1)
 			{
-				TShock.Utils.SendMultipleMatchError(args.Player, npcs.Select(n => n.FullName));
+				args.Player.SendMultipleMatchError(npcs.Select(n => n.FullName));
 			}
 			else
 			{
