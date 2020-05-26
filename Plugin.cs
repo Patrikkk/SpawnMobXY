@@ -16,7 +16,7 @@ namespace SpawnMobXY
 		public override string Description { get { return "Extends spawnmob and spawnboss commands."; } }
 		public override Version Version { get { return new Version(1, 0); } }
 
-		public static List<string> bosses = new List<string>() { "brain", "destroyer", "fishron", "eater", "eye", "golem", "king slime", "plantera", "prime", "queen bee", "skeletron", "twins", "wof" };
+		public static List<string> bosses = new List<string>() { "brain", "destroyer", "fishron", "eater", "eye", "golem", "king slime", "plantera", "prime", "queen bee", "skeletron", "twins", "wof", "moon lord" };
 
 		public Plugin(Main game)
 			: base(game)
@@ -127,7 +127,7 @@ namespace SpawnMobXY
 			{
 				case "*":
 				case "all":
-					int[] npcIds = { 4, 13, 35, 50, 125, 126, 127, 134, 222, 245, 262, 266, 370 };
+					int[] npcIds = { 4, 13, 35, 50, 125, 126, 127, 134, 222, 245, 262, 266, 370, 398 };
 					TSPlayer.Server.SetTime(false, 0.0);
 					foreach (int i in npcIds)
 					{
@@ -191,14 +191,10 @@ namespace SpawnMobXY
 					TSPlayer.Server.SetTime(false, 0.0);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
 					if (!args.Silent)
-					{
-						TSPlayer.All.SendSuccessMessage("{0} has spawned Golem {1} time(s).", args.Player.Name, amount);
-					}
-					else
-					{
-						args.Player.SendSuccessMessage("Spawned Golem {0} time(s).", amount);
-					}
-					return;
+                        TSPlayer.All.SendSuccessMessage("{0} has spawned Golem {1} time(s).", args.Player.Name, amount);
+                    else
+                        args.Player.SendSuccessMessage("Spawned Golem {0} time(s).", amount);
+                    return;
 				case "king":
 				case "king slime":
 					npc.SetDefaults(50);
@@ -279,10 +275,19 @@ namespace SpawnMobXY
 					else
 						args.Player.SendSuccessMessage("Spawned the Wall of Flesh.", amount);
 					return;
-				default:
-					args.Player.SendErrorMessage("Invalid boss type!");
-					return;
-			}
+                case "moon":
+                case "moon lord":
+                    npc.SetDefaults(398);
+                    TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
+                    if (!args.Silent)
+                        TSPlayer.All.SendSuccessMessage("{0} has spawned the Moon Lord {1} time(s).", args.Player.Name, amount);
+                    else
+                        args.Player.SendSuccessMessage("Spawned the Moonlord.", amount);
+                    return;
+                default:
+                    args.Player.SendErrorMessage("Invalid boss type!");
+                    return;
+            }
 		}
 
 		public static void SpawnMob(CommandArgs args)
