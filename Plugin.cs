@@ -8,7 +8,7 @@ using TShockAPI;
 
 namespace SpawnMobXY
 {
-	[ApiVersion(1, 21)]
+	[ApiVersion(2, 1)]
 	public class Plugin  : TerrariaPlugin
 	{
 		public override string Name { get { return "SpawnMobXY"; } }
