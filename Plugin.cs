@@ -263,7 +263,7 @@ namespace SpawnMobXY
 						args.Player.SendErrorMessage("You cannot spawn Wall of Flesh from server console!");
 						return;
 					}
-					if (Main.wof >= 0)
+					if (Main.wofNPCIndex >= 0)
 					{
 						args.Player.SendErrorMessage("There is already a Wall of Flesh!");
 						return;
@@ -372,7 +372,7 @@ namespace SpawnMobXY
 				}
 				else if (npc.type == 113)
 				{
-					if (Main.wof >= 0 || (args.Player.Y / 16f < (Main.maxTilesY - 205)))
+					if (Main.wofNPCIndex >= 0 || (args.Player.Y / 16f < (Main.maxTilesY - 205)))
 					{
 						args.Player.SendErrorMessage("Can't spawn Wall of Flesh!");
 						return;
