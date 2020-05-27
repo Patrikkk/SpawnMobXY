@@ -63,64 +63,54 @@ namespace SpawnMobXY
 				return;
 				
 			}
-			if (args.Parameters.Count < 1 || args.Parameters.Count > 4)
+			if (args.Parameters.Count < 1)
 			{
-				args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnboss <boss type> [amount] [XPos] [YPos]", TShock.Config.CommandSpecifier);
-				return;
-			}
-			if (!args.Player.RealPlayer && args.Parameters.Count != 4)
-			{
-				args.Player.SendErrorMessage("You are required to set coordinates from console! ");
-				args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnmob <mob type> [amount] [XPos] [YPos]", TShock.Config.CommandSpecifier);
+				args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnboss <boss type> [amount] [-health] [-x] [-y]", TShock.Config.CommandSpecifier);
 				return;
 			}
 
+            string healthStr = "", xStr = "", yStr = "";
+            Mono.Options.OptionSet options = new Mono.Options.OptionSet()
+            {
+                { "h|health=", v => healthStr = v},
+                { "x=", v => xStr = v},
+                { "y=", v => yStr = v},
+            };
+            List<string> parameters = options.Parse(args.Parameters);
 
+            int health = -1;
+            if (int.TryParse(healthStr, out health) && health < 0)
+            {
+                args.Player.SendErrorMessage("Health amount must be greater than 0!");
+                return;
+            }
 
-			int amount = 1;
+            if (!args.Player.RealPlayer && (string.IsNullOrEmpty(xStr) || string.IsNullOrEmpty(yStr)))
+            {
+                args.Player.SendErrorMessage("You are required to set coordinates from console! ");
+                args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnboss <boss type> [amount] [-health] [-x] [-y]", TShock.Config.CommandSpecifier);
+                return;
+            }
+
+            int amount = 1;
 			if (args.Parameters.Count >= 2 && (!int.TryParse(args.Parameters[1], out amount) || amount <= 0))
 			{
 				args.Player.SendErrorMessage("Invalid boss amount!");
 				return;
 			}
-			int x = -1;
-			int y = -1;
-			if (args.Parameters.Count >= 3 && !int.TryParse(args.Parameters[2], out x))
+			int TileX = args.Player.TileX;
+			int TileY = args.Player.TileY;
+			if (!int.TryParse(xStr, out TileX) || !int.TryParse(yStr, out TileY))
 			{
-				args.Player.SendErrorMessage("Invalid X coordinates!");
+				args.Player.SendErrorMessage("Invalid X and Y coordinates! Format: -x 1234 -y 1234");
 				return;
 			}
-			if (args.Parameters.Count == 3)
-			{
-				args.Player.SendErrorMessage("You must set both X and Y coordinates!");
-				return;
-			}
-			if (args.Parameters.Count == 4)
-			{
-				if (args.Parameters.Count >= 4 && !int.TryParse(args.Parameters[3], out y))
-				{
-					args.Player.SendErrorMessage("Invalid Y coordinates!");
-					return;
-				}
 
-				if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
-				{
-					args.Player.SendErrorMessage("Given coordinates are invalid!");
-					return;
-				}
-			}
-			int TileX = -1;
-			int TileY = -1;
-			if (args.Parameters.Count == 4)
-			{
-				TileX = x;
-				TileY = y;
-			}
-			else
-			{
-				TileX = args.Player.TileX;
-				TileY = args.Player.TileY;
-			}
+            if (TileX < 0 || TileX >= Main.maxTilesX || TileY < 0 || TileY >= Main.maxTilesY)
+            {
+                args.Player.SendErrorMessage("Given coordinates are invalid!");
+                return;
+            }
 
 			NPC npc = new NPC();
 			switch (args.Parameters[0].ToLower())
@@ -132,7 +122,7 @@ namespace SpawnMobXY
 					foreach (int i in npcIds)
 					{
 						npc.SetDefaults(i);
-						TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+						SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					}
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned all bosses {1} time(s).", args.Player.Name, amount);
@@ -142,7 +132,7 @@ namespace SpawnMobXY
 				case "brain":
 				case "brain of cthulhu":
 					npc.SetDefaults(266);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 				   if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned the Brain of Cthulhu {1} time(s).", args.Player.Name, amount);
 					else
@@ -151,7 +141,7 @@ namespace SpawnMobXY
 				case "destroyer":
 					npc.SetDefaults(134);
 					TSPlayer.Server.SetTime(false, 0.0);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned the Destroyer {1} time(s).", args.Player.Name, amount);
 					else
@@ -161,7 +151,7 @@ namespace SpawnMobXY
 				case "duke fishron":
 				case "fishron":
 					npc.SetDefaults(370);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned Duke Fishron {1} time(s).", args.Player.Name, amount);
 					else
@@ -170,7 +160,7 @@ namespace SpawnMobXY
 				case "eater":
 				case "eater of worlds":
 					npc.SetDefaults(13);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned the Eater of Worlds {1} time(s).", args.Player.Name, amount);
 					else
@@ -180,7 +170,7 @@ namespace SpawnMobXY
 				case "eye of cthulhu":
 					npc.SetDefaults(4);
 					TSPlayer.Server.SetTime(false, 0.0);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned the Eye of Cthulhu {1} time(s).", args.Player.Name, amount);
 					else
@@ -189,7 +179,7 @@ namespace SpawnMobXY
 				case "golem":
 					npc.SetDefaults(245);
 					TSPlayer.Server.SetTime(false, 0.0);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
                         TSPlayer.All.SendSuccessMessage("{0} has spawned Golem {1} time(s).", args.Player.Name, amount);
                     else
@@ -198,7 +188,7 @@ namespace SpawnMobXY
 				case "king":
 				case "king slime":
 					npc.SetDefaults(50);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned King Slime {1} time(s).", args.Player.Name, amount);
 					else
@@ -206,7 +196,7 @@ namespace SpawnMobXY
 					return;
 				case "plantera":
 					npc.SetDefaults(262);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned Plantera {1} time(s).", args.Player.Name, amount);
 					else
@@ -216,7 +206,7 @@ namespace SpawnMobXY
 				case "skeletron prime":
 					npc.SetDefaults(127);
 					TSPlayer.Server.SetTime(false, 0.0);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned Skeletron Prime {1} time(s).", args.Player.Name, amount);
 					else
@@ -226,7 +216,7 @@ namespace SpawnMobXY
 				case "queen bee":
 					npc.SetDefaults(222);
 					TSPlayer.Server.SetTime(false, 0.0);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned Queen Bee {1} time(s).", args.Player.Name, amount);
 					else
@@ -235,7 +225,7 @@ namespace SpawnMobXY
 				case "skeletron":
 					npc.SetDefaults(35);
 					TSPlayer.Server.SetTime(false, 0.0);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned Skeletron {1} time(s).", args.Player.Name, amount);
 					else
@@ -244,9 +234,9 @@ namespace SpawnMobXY
 				case "twins":
 					TSPlayer.Server.SetTime(false, 0.0);
 					npc.SetDefaults(125);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					npc.SetDefaults(126);
-					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					if (!args.Silent)
 						TSPlayer.All.SendSuccessMessage("{0} has spawned the Twins {1} time(s).", args.Player.Name, amount);
 					else
@@ -290,59 +280,62 @@ namespace SpawnMobXY
             }
 		}
 
-		public static void SpawnMob(CommandArgs args)
+        public static void SpawnMob(CommandArgs args)
 		{
-			if ((args.Parameters.Count < 1 || args.Parameters.Count > 4))
+			if (args.Parameters.Count < 1)
 			{
-				args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnmob <mob type> [amount] [XPos] [YPos]", TShock.Config.CommandSpecifier);
-				return;
-			}
-			if (!args.Player.RealPlayer && args.Parameters.Count != 4)
-			{
-				args.Player.SendErrorMessage("You are required to set coordinates from console! ");
-				args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnmob <mob type> [amount] [XPos] [YPos]", TShock.Config.CommandSpecifier);
-				return;
-			}
-			if (args.Parameters[0].Length == 0)
-			{
-				args.Player.SendErrorMessage("Invalid mob type!");
+				args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnmob <mob type> [amount] [-health] [-x] [-y]", TShock.Config.CommandSpecifier);
 				return;
 			}
 
 			int amount = 1;
-			if (args.Parameters.Count >= 2 && !int.TryParse(args.Parameters[1], out amount))
+			if (args.Parameters.Count >= 2 && (!int.TryParse(args.Parameters[1], out amount) || amount <= 0))
 			{
-				args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnmob <mob type> [amount] [XPos] [YPos]", TShock.Config.CommandSpecifier);
+				args.Player.SendErrorMessage("Invalid mob amount!");
 				return;
-			}
-			int x = -1;
-			int y = -1;
-			if (args.Parameters.Count > 3 && !int.TryParse(args.Parameters[2], out x))
-			{
-				args.Player.SendErrorMessage("Invalid X coordinates!");
-				return;
-			}
-			if (args.Parameters.Count == 3)
-			{
-				args.Player.SendErrorMessage("You must set both X and Y coordinates!");
-				return;
-			}
-			if (args.Parameters.Count == 4)
-			{
-				if (args.Parameters.Count > 3 && !int.TryParse(args.Parameters[3], out y))
-				{
-					args.Player.SendErrorMessage("Invalid Y coordinates!");
-					return;
-				}
-
-				if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
-				{
-					args.Player.SendErrorMessage("Given coordinates are invalid!");
-					return;
-				}
 			}
 
-			amount = Math.Min(amount, Main.maxNPCs);
+            string healthStr = "", xStr = "", yStr = "";
+            Mono.Options.OptionSet options = new Mono.Options.OptionSet()
+            {
+                { "h|health=", v => healthStr = v},
+                { "x=", v => xStr = v},
+                { "y=", v => yStr = v},
+            };
+            List<string> parameters = options.Parse(args.Parameters);
+
+            int health = -1;
+            if (int.TryParse(healthStr, out health) && health < 0)
+            {
+                args.Player.SendErrorMessage("Health amount must be greater than 0!");
+                return;
+            }
+
+            if (!args.Player.RealPlayer && (string.IsNullOrEmpty(xStr) || string.IsNullOrEmpty(yStr)))
+            {
+                args.Player.SendErrorMessage("You are required to set coordinates from console! ");
+                args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}spawnmob <mob type> [amount] [-health] [-x] [-y]", TShock.Config.CommandSpecifier);
+                return;
+            }
+
+            int TileX = args.Player.TileX;
+            int TileY = args.Player.TileY;
+            if (!string.IsNullOrEmpty(xStr) || !string.IsNullOrEmpty(xStr))
+            {
+                if (!int.TryParse(xStr, out TileX) || !int.TryParse(yStr, out TileY))
+                {
+                    args.Player.SendErrorMessage("Invalid X and Y coordinates! Format: -x 1234 -y 1234");
+                    return;
+                }
+            }
+
+            if (TileX < 0 || TileX >= Main.maxTilesX || TileY < 0 || TileY >= Main.maxTilesY)
+            {
+                args.Player.SendErrorMessage("Given coordinates are invalid!");
+                return;
+            }
+
+            amount = Math.Min(amount, Main.maxNPCs);
 
 			var npcs = TShock.Utils.GetNPCByIdOrName(args.Parameters[0]);
 			if (npcs.Count == 0)
@@ -358,14 +351,8 @@ namespace SpawnMobXY
 				var npc = npcs[0];
 				if (npc.type >= 1 && npc.type < Main.maxNPCTypes && npc.type != 113)
 				{
-					if (args.Parameters.Count == 4)
-					{
-						TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, x, y, 35, 10);
-					}
-					else
-					{
-						TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY, 50, 20);
-					}
+                    SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health, 35, 10);
+
 					if (args.Silent)
 					{
 						args.Player.SendSuccessMessage("Spawned {0} {1} time(s).", npc.FullName, amount);
@@ -398,5 +385,23 @@ namespace SpawnMobXY
 				}
 			}
 		}
-	}
+        private static void SpawnNPC(int type, string fullName, int amount, int tileX, int tileY, int health = -1, int tileXRange = 100, int tileYRange = 50)
+        {
+            if (health == 0)
+                TSPlayer.Server.SpawnNPC(type, fullName, amount, tileX, tileY, tileXRange, tileYRange);
+            else
+            {
+                for (int i = 0; i < amount; i++)
+                {
+                    TShock.Utils.GetRandomClearTileWithInRange(tileX, tileY, tileXRange, tileYRange, out tileX, out tileY);
+                    int npcIndex = NPC.NewNPC(tileX * 16, tileY * 16, type);
+                    var npc = Main.npc[npcIndex];
+                    npc.life = health;
+                    npc.lifeMax = health;
+
+                    TSPlayer.All.SendData(PacketTypes.NpcUpdate, fullName, npcIndex);
+                }
+            }
+        }
+    }
 }
