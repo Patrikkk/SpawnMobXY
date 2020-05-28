@@ -100,11 +100,14 @@ namespace SpawnMobXY
 			}
 			int TileX = args.Player.TileX;
 			int TileY = args.Player.TileY;
-			if (!int.TryParse(xStr, out TileX) || !int.TryParse(yStr, out TileY))
-			{
-				args.Player.SendErrorMessage("Invalid X and Y coordinates! Format: -x 1234 -y 1234");
-				return;
-			}
+            if (!string.IsNullOrEmpty(xStr) || !string.IsNullOrEmpty(xStr))
+            {
+                if (!int.TryParse(xStr, out TileX) || !int.TryParse(yStr, out TileY))
+                {
+                    args.Player.SendErrorMessage("Invalid X and Y coordinates! Format: -x 1234 -y 1234");
+                    return;
+                }
+            }
 
             if (TileX < 0 || TileX >= Main.maxTilesX || TileY < 0 || TileY >= Main.maxTilesY)
             {
