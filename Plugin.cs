@@ -16,7 +16,7 @@ namespace SpawnMobXY
 		public override string Description { get { return "Extends spawnmob and spawnboss commands."; } }
 		public override Version Version { get { return new Version(1, 0); } }
 
-		public static List<string> bosses = new List<string>() { "brain", "destroyer", "fishron", "eater", "eye", "golem", "king slime", "plantera", "prime", "queen bee", "skeletron", "twins", "wof", "moon lord" };
+		public static List<string> bosses = new List<string>() { "brain", "destroyer", "fishron", "eater", "eye", "golem", "king slime", "plantera", "prime", "queen bee", "skeletron", "twins", "wof", "moon lord", "empress of light", "queen slime" };
 
 		public Plugin(Main game)
 			: base(game)
@@ -120,119 +120,85 @@ namespace SpawnMobXY
 			{
 				case "*":
 				case "all":
-					int[] npcIds = { 4, 13, 35, 50, 125, 126, 127, 134, 222, 245, 262, 266, 370, 398 };
+					int[] npcIds = { 4, 13, 35, 50, 125, 126, 127, 134, 222, 245, 262, 266, 370, 398, 439, 636, 657 };
 					TSPlayer.Server.SetTime(false, 0.0);
 					foreach (int i in npcIds)
 					{
 						npc.SetDefaults(i);
-						SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+						TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					}
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned all bosses {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned all bosses {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned all bosses {1} time(s).", args.Player.Name, amount);
 					return;
 				case "brain":
 				case "brain of cthulhu":
+				case "boc":
 					npc.SetDefaults(266);
-					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-				   if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned the Brain of Cthulhu {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned the Brain of Cthulhu {0} time(s).", amount);
-						return;
+                    SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+                    TSPlayer.All.SendSuccessMessage("{0} has spawned the Brain of Cthulhu {1} time(s).", args.Player.Name, amount);
+					return;
 				case "destroyer":
 					npc.SetDefaults(134);
 					TSPlayer.Server.SetTime(false, 0.0);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned the Destroyer {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned the Destroyer {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Destroyer {1} time(s).", args.Player.Name, amount);
 					return;
 				case "duke":
 				case "duke fishron":
 				case "fishron":
 					npc.SetDefaults(370);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned Duke Fishron {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned Duke Fishron {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Duke Fishron {1} time(s).", args.Player.Name, amount);
 					return;
 				case "eater":
 				case "eater of worlds":
+				case "eow":
 					npc.SetDefaults(13);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned the Eater of Worlds {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned the Eater of Worlds {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Eater of Worlds {1} time(s).", args.Player.Name, amount);
 					return;
 				case "eye":
 				case "eye of cthulhu":
+				case "eoc":
 					npc.SetDefaults(4);
 					TSPlayer.Server.SetTime(false, 0.0);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned the Eye of Cthulhu {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned the Eye of Cthulhu {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Eye of Cthulhu {1} time(s).", args.Player.Name, amount);
 					return;
 				case "golem":
 					npc.SetDefaults(245);
-					TSPlayer.Server.SetTime(false, 0.0);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-                        TSPlayer.All.SendSuccessMessage("{0} has spawned Golem {1} time(s).", args.Player.Name, amount);
-                    else
-                        args.Player.SendSuccessMessage("Spawned Golem {0} time(s).", amount);
-                    return;
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Golem {1} time(s).", args.Player.Name, amount);
+					return;
 				case "king":
 				case "king slime":
+				case "ks":
 					npc.SetDefaults(50);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned King Slime {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned King Slime {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned King Slime {1} time(s).", args.Player.Name, amount);
 					return;
 				case "plantera":
 					npc.SetDefaults(262);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned Plantera {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned Plantera {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Plantera {1} time(s).", args.Player.Name, amount);
 					return;
 				case "prime":
 				case "skeletron prime":
 					npc.SetDefaults(127);
 					TSPlayer.Server.SetTime(false, 0.0);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned Skeletron Prime {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned Skeletron Prime {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Skeletron Prime {1} time(s).", args.Player.Name, amount);
 					return;
-				case "queen":
 				case "queen bee":
+				case "qb":
 					npc.SetDefaults(222);
-					TSPlayer.Server.SetTime(false, 0.0);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned Queen Bee {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned Queen Bee {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Queen Bee {1} time(s).", args.Player.Name, amount);
 					return;
 				case "skeletron":
 					npc.SetDefaults(35);
 					TSPlayer.Server.SetTime(false, 0.0);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned Skeletron {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned Skeletron {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Skeletron {1} time(s).", args.Player.Name, amount);
 					return;
 				case "twins":
 					TSPlayer.Server.SetTime(false, 0.0);
@@ -240,19 +206,11 @@ namespace SpawnMobXY
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
 					npc.SetDefaults(126);
 					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned the Twins {1} time(s).", args.Player.Name, amount);
-					else
-						args.Player.SendSuccessMessage("Spawned the Twins {0} time(s).", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Twins {1} time(s).", args.Player.Name, amount);
 					return;
 				case "wof":
 				case "wall of flesh":
-					if (!args.Player.RealPlayer)
-					{
-						args.Player.SendErrorMessage("You cannot spawn Wall of Flesh from server console!");
-						return;
-					}
-					if (Main.wofNPCIndex >= 0)
+					if (Main.wofNPCIndex != -1)
 					{
 						args.Player.SendErrorMessage("There is already a Wall of Flesh!");
 						return;
@@ -263,20 +221,99 @@ namespace SpawnMobXY
 						return;
 					}
 					NPC.SpawnWOF(new Vector2(args.Player.X, args.Player.Y));
-					if (!args.Silent)
-						TSPlayer.All.SendSuccessMessage("{0} has spawned the Wall of Flesh.", args.Player.Name);
-					else
-						args.Player.SendSuccessMessage("Spawned the Wall of Flesh.", amount);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Wall of Flesh.", args.Player.Name);
 					return;
-                case "moon":
-                case "moon lord":
-                    npc.SetDefaults(398);
-                    TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
-                    if (!args.Silent)
-                        TSPlayer.All.SendSuccessMessage("{0} has spawned the Moon Lord {1} time(s).", args.Player.Name, amount);
-                    else
-                        args.Player.SendSuccessMessage("Spawned the Moonlord.", amount);
-                    return;
+				case "moon":
+				case "moon lord":
+				case "ml":
+					npc.SetDefaults(398);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Moon Lord {1} time(s).", args.Player.Name, amount);
+					return;
+				case "empress":
+				case "empress of light":
+				case "eol":
+					npc.SetDefaults(636);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Empress of Light {1} time(s).", args.Player.Name, amount);
+					return;
+				case "queen slime":
+				case "qs":
+					npc.SetDefaults(657);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Queen Slime {1} time(s).", args.Player.Name, amount);
+					return;
+				case "lunatic":
+				case "lunatic cultist":
+				case "cultist":
+				case "lc":
+					npc.SetDefaults(439);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Lunatic Cultist {1} time(s).", args.Player.Name, amount);
+					return;
+				case "betsy":
+					npc.SetDefaults(551);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Betsy {1} time(s).", args.Player.Name, amount);
+					return;
+				case "flying dutchman":
+				case "flying":
+				case "dutchman":
+					npc.SetDefaults(491);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Flying Dutchman {1} time(s).", args.Player.Name, amount);
+					return;
+				case "mourning wood":
+					npc.SetDefaults(325);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Mourning Wood {1} time(s).", args.Player.Name, amount);
+					return;
+				case "pumpking":
+					npc.SetDefaults(327);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Pumpking {1} time(s).", args.Player.Name, amount);
+					return;
+				case "everscream":
+					npc.SetDefaults(344);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Everscream {1} time(s).", args.Player.Name, amount);
+					return;
+				case "santa-nk1":
+				case "santa":
+					npc.SetDefaults(346);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned Santa-NK1 {1} time(s).", args.Player.Name, amount);
+					return;
+				case "ice queen":
+					npc.SetDefaults(345);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Ice Queen {1} time(s).", args.Player.Name, amount);
+					return;
+				case "martian saucer":
+					npc.SetDefaults(392);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Martian Saucer {1} time(s).", args.Player.Name, amount);
+					return;
+				case "solar pillar":
+					npc.SetDefaults(517);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Solar Pillar {1} time(s).", args.Player.Name, amount);
+					return;
+				case "nebula pillar": 
+					npc.SetDefaults(507);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Nebula Pillar {1} time(s).", args.Player.Name, amount);
+					return;
+				case "vortex pillar":
+					npc.SetDefaults(422);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Vortex Pillar {1} time(s).", args.Player.Name, amount);
+					return;
+				case "stardust pillar":
+					npc.SetDefaults(493);
+					SpawnNPC(npc.type, npc.FullName, amount, TileX, TileY, health);
+					TSPlayer.All.SendSuccessMessage("{0} has spawned the Stardust Pillar {1} time(s).", args.Player.Name, amount);
+					return;
                 default:
                     args.Player.SendErrorMessage("Invalid boss type!");
                     return;
